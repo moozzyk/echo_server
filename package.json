@@ -9,10 +9,12 @@
     "test": "node --test",
     "lint": "eslint .",
     "format": "prettier --check .",
-    "format:write": "prettier --write ."
+    "format:write": "prettier --write .",
+    "prepare": "husky"
   },
   "devDependencies": {
     "eslint": "^9.9.0",
+    "husky": "^9.1.7",
     "prettier": "^3.3.3"
   }
 }
