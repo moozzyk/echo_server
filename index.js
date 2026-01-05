@@ -2,8 +2,20 @@ const net = require("node:net");
 
 function createServer() {
   return net.createServer((socket) => {
+    const remote = `${socket.remoteAddress ?? "unknown"}:${socket.remotePort ?? "?"}`;
+    console.log(`Client connected from ${remote}`);
+
     socket.on("data", (data) => {
+      console.log(`Received ${data.length} bytes from ${remote}`);
       socket.write(data);
+    });
+
+    socket.on("error", (error) => {
+      console.error(`Socket error from ${remote}:`, error.message);
+    });
+
+    socket.on("end", () => {
+      console.log(`Client disconnected from ${remote}`);
     });
   });
 }
