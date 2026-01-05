@@ -6,6 +6,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
+    "test": "node --test",
     "lint": "eslint .",
     "format": "prettier --check .",
     "format:write": "prettier --write ."

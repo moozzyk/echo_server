@@ -2,45 +2,35 @@
 
 ## Project Structure & Module Organization
 
-- Current state: the repository contains only the `.git` directory and no tracked source files yet.
-- Suggested layout as the project grows:
-  - `src/` for application code
-  - `tests/` for unit/integration tests
-  - `scripts/` for tooling and developer utilities
-  - `docs/` for design notes and operational guides
+- Entry point: `index.js` contains the runtime behavior.
+- Tests live in `tests/` (for example, `tests/echo.test.js`).
+- Tooling config: `eslint.config.cjs`, `.prettierrc`, `.prettierignore`.
+- If the app grows, add `src/` for modules and keep `index.js` as a thin bootstrap.
 
 ## Build, Test, and Development Commands
 
-- No build or test commands are defined yet. Add them to this section once a build system is introduced.
-- Example patterns to adopt when ready:
-  - `make build` for compiling or packaging
-  - `make test` or `npm test` for running the test suite
-  - `make run` or `npm start` for local execution
+- `npm start` runs the app (`node index.js`).
+- `npm test` runs the Node.js test runner (`node --test`).
+- `npm run lint` checks code with ESLint.
+- `npm run format` checks formatting with Prettier.
+- `npm run format:write` auto-formats the repo.
 
 ## Coding Style & Naming Conventions
 
-- No formatting or linting rules are established yet.
-- When adding code, document:
-  - Indentation (e.g., 2 or 4 spaces)
-  - File naming conventions (e.g., `snake_case` or `kebab-case`)
-  - Lint/format tools (e.g., `ruff`, `gofmt`, `prettier`)
+- Formatting is enforced by Prettier (`npm run format`).
+- Linting uses ESLint with the flat config in `eslint.config.cjs`.
+- Use clear, descriptive names; keep files in `tests/` named `*.test.js`.
 
 ## Testing Guidelines
 
-- No testing framework is configured yet.
-- When tests are added, document:
-  - Frameworks used (e.g., `pytest`, `go test`, `jest`)
-  - Naming pattern (e.g., `*_test.go`, `test_*.py`)
-  - How to run full vs. focused test runs
+- Tests use the built-in `node:test` runner.
+- Add new tests under `tests/` with the `*.test.js` suffix.
+- Run the full suite with `npm test`.
 
 ## Commit & Pull Request Guidelines
 
-- No commit history exists, so no conventions are established.
-- When starting, prefer clear, imperative commit messages (e.g., `Add echo handler`).
-- Pull requests should include:
-  - A short summary of changes
-  - Linked issues (if applicable)
-  - Test results or verification notes
+- Use imperative, scoped commit messages (e.g., `Add echo test`).
+- PRs should include a short summary and test results (`npm test`).
 
 ## Agent-Specific Instructions
 
