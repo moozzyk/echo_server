@@ -10,6 +10,7 @@
 ## Build, Test, and Development Commands
 
 - `npm start` runs the app (`node index.js`).
+- The server defaults to port `7`; override with `PORT=7000 npm start` for unprivileged ports.
 - `npm test` runs the Node.js test runner (`node --test`).
 - `npm run lint` checks code with ESLint.
 - `npm run format` checks formatting with Prettier.

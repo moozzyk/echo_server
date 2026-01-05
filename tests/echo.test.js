@@ -1,21 +1,27 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
+const { EventEmitter } = require("node:events");
 
-const expectedOutput = "Hello, World!\n";
+const { createServer } = require("../index.js");
 
-test("prints Hello, World!", async () => {
-  const logs = [];
-  const originalLog = console.log;
-
-  console.log = (...args) => {
-    logs.push(args.join(" ") + "\n");
-  };
-
-  try {
-    require("../index.js");
-  } finally {
-    console.log = originalLog;
+class FakeSocket extends EventEmitter {
+  constructor() {
+    super();
+    this.writes = [];
   }
 
-  assert.equal(logs.join(""), expectedOutput);
+  write(data) {
+    this.writes.push(data);
+  }
+}
+
+test("echoes back data", () => {
+  const server = createServer();
+  const socket = new FakeSocket();
+
+  server.emit("connection", socket);
+  socket.emit("data", Buffer.from("ping"));
+
+  assert.equal(socket.writes.length, 1);
+  assert.equal(socket.writes[0].toString(), "ping");
 });
