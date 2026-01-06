@@ -2,7 +2,7 @@
 
 ## Project Structure & Module Organization
 
-- Entry point: `index.js` contains the runtime behavior.
+- Entry point: `index.js` contains the TCP/UDP echo server.
 - Tests live in `tests/` (for example, `tests/echo.test.js`).
 - Tooling config: `eslint.config.cjs`, `.prettierrc`, `.prettierignore`.
 - If the app grows, add `src/` for modules and keep `index.js` as a thin bootstrap.
@@ -10,7 +10,7 @@
 ## Build, Test, and Development Commands
 
 - `npm start` runs the app (`node index.js`).
-- The server defaults to port `7`; override with `PORT=7000 npm start` for unprivileged ports.
+- The server defaults to port `7` and TCP; override with `PORT=7000 PROTOCOL=udp npm start` as needed.
 - `npm test` runs the Node.js test runner (`node --test`).
 - `npm run lint` checks code with ESLint.
 - `npm run format` checks formatting with Prettier.

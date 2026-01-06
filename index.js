@@ -1,6 +1,7 @@
+const dgram = require("node:dgram");
 const net = require("node:net");
 
-function createServer() {
+function createTcpServer() {
   return net.createServer((socket) => {
     const remote = `${socket.remoteAddress ?? "unknown"}:${socket.remotePort ?? "?"}`;
     console.log(`Client connected from ${remote}`);
@@ -20,25 +21,61 @@ function createServer() {
   });
 }
 
-function startServer(options = {}) {
+function createUdpServer() {
+  const server = dgram.createSocket("udp4");
+
+  server.on("message", (message, rinfo) => {
+    const remote = `${rinfo.address}:${rinfo.port}`;
+    console.log(`Received ${message.length} bytes via UDP from ${remote}`);
+    server.send(message, rinfo.port, rinfo.address);
+  });
+
+  server.on("error", (error) => {
+    console.error("UDP server error:", error.message);
+  });
+
+  return server;
+}
+
+async function startServer(options = {}) {
   const port = Number(options.port ?? process.env.PORT ?? 7);
   const host = options.host ?? process.env.HOST ?? "0.0.0.0";
-  const server = createServer();
+  const protocol = (options.protocol ?? process.env.PROTOCOL ?? "tcp").toLowerCase();
 
-  return new Promise((resolve, reject) => {
-    server.once("error", reject);
-    server.listen(port, host, () => {
-      server.off("error", reject);
-      resolve(server);
+  if (protocol === "tcp") {
+    const tcpServer = createTcpServer();
+    await new Promise((resolve, reject) => {
+      tcpServer.once("error", reject);
+      tcpServer.listen(port, host, () => {
+        tcpServer.off("error", reject);
+        resolve();
+      });
     });
-  });
+    return { protocol, server: tcpServer };
+  }
+
+  if (protocol === "udp") {
+    const udpServer = createUdpServer();
+    await new Promise((resolve, reject) => {
+      udpServer.once("error", reject);
+      udpServer.bind(port, host, () => {
+        udpServer.off("error", reject);
+        resolve();
+      });
+    });
+    return { protocol, server: udpServer };
+  }
+
+  throw new Error(`Unsupported protocol: ${protocol}`);
 }
 
 if (require.main === module) {
   startServer()
-    .then((server) => {
+    .then(({ protocol, server }) => {
       const address = server.address();
-      console.log(`Echo server listening on ${address.address}:${address.port}`);
+      console.log(
+        `Echo server listening on ${address.address}:${address.port} (${protocol.toUpperCase()})`
+      );
     })
     .catch((error) => {
       console.error("Failed to start echo server:", error.message);
@@ -47,6 +84,7 @@ if (require.main === module) {
 }
 
 module.exports = {
-  createServer,
+  createTcpServer,
+  createUdpServer,
   startServer,
 };
